@@ -2,10 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-db = SQLAlchemy()
 
+app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:pupelo35@localhost:5432/mypass'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
-def create_app():
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:1310526879@localhost:5432/mypass'
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    return app
+db = SQLAlchemy(app)
+
