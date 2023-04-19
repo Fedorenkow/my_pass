@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, render_template
 from api import app, db
 from api.models import it_college_type
 from api.models.it_college import it_college
@@ -41,4 +41,5 @@ def add_member():
     db.session.add(new_member)
     db.session.commit()
 
-    return 'Member added successfully.', 201
+    return render_template("insert_user.html", title="Register")
+
