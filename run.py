@@ -1,4 +1,6 @@
-from app import app
+from api import create_app, db
+
+app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    db.init_app(app)
