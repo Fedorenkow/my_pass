@@ -1,5 +1,5 @@
 from flask import request, render_template
-from api import app, db
+from api import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
 
