@@ -1,5 +1,5 @@
 from datetime import datetime
-from api import db
+from api.app import db
 
 
 class it_college_type(db.Model):
