@@ -9,8 +9,8 @@ class it_college(db.Model):
     email = db.Column(db.String(30), unique=True, nullable=False)
     unique_code = db.Column(db.String(10), unique=True, nullable=False)
     registered = db.Column(db.DateTime, default=datetime.utcnow)
-    type_id = db.Column(db.Integer, db.ForeignKey("it_college_type.py.id"), nullable=False, )
-    type = db.relationship('it_college_type.py', backref='it_colleges')
+    type_id = db.Column(db.Integer, db.ForeignKey("it_college_type.id"), nullable=False, )
+    type = db.relationship('it_college_type', backref='it_college')
 
     def __repr__(self):
         return f"<it_college:{self.id}>"
