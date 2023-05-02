@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 api = Api(app)
 
 with app.app_context():
