@@ -4,7 +4,11 @@ from api.models import it_college_type
 from api.models.it_college import it_college
 
 
-@app.route('/add', methods=['POST'])
+@app.route('/')
+def hello():
+    return 'hello'
+
+@app.route('/add', methods = ["POST"])
 def add_member():
     # Отримання даних з запиту POST
     first_name = request.form.get('first_name')
@@ -42,4 +46,3 @@ def add_member():
     db.session.commit()
 
     return render_template("insert_user.html", title="Register")
-
