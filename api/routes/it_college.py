@@ -4,7 +4,7 @@ from api.models import it_college_type
 from api.models.it_college import it_college
 
 
-@app.route('/add_member', methods=['POST'])
+@app.route('/add', methods=['POST'])
 def add_member():
     # Отримання даних з запиту POST
     first_name = request.form.get('first_name')
