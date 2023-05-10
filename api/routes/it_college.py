@@ -2,6 +2,7 @@ from flask import request, render_template
 from api.app import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
+from api.models.it_college_type import it_college_type
 
 
 @app.route('/')
@@ -18,6 +19,8 @@ def add_member():
         email = request.form.get('email')
         unique_code = request.form.get('unique_code')
         type_id = request.form.get('type_id')
+        id = request.form.get('id')
+        name = request.form.get('name')
 
         # Перевірка чи всі дані присутні у запиті POST
         if not all([first_name, last_name, email, unique_code, type_id]):
@@ -33,10 +36,10 @@ def add_member():
         if member:
             return 'Member with this unique code already exists.', 409
 
-        # Перевірка чи введений type_id існує в таблиці it_college_type
-        member_type = it_college_type.query.filter_by(id=type_id).first()
-        if not member_type:
-            return 'Invalid member type.', 400
+        # # Перевірка чи введений type_id існує в таблиці it_college_type
+        # member_type = it_college_type.query.filter_by(id=type_id).first()
+        # if not member_type:
+        #     return 'Invalid member type.', 400
 
         # Створення нового члену і додавання до бази даних
         new_member = it_college(first_name=first_name,
@@ -44,11 +47,26 @@ def add_member():
                                 email=email,
                                 unique_code=unique_code,
                                 type_id=type_id)
+        new_member_type = it_college_type(id=id,
+                                          name=name)
         db.session.add(new_member)
+        db.session.add(new_member_type)
         db.session.commit()
 
         return render_template("insert_user.html", title="Register")
 
     else:
         return render_template("insert_user.html", title="Register")
+
+
+@app.route('/<int:id>', methods=['GET'])
+def get_member(id):
+    member = it_college.query.get(id)
+    if member:
+        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
+    else:
+        return 'Member not found'
+
+
+
 
