@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, jsonify
 from api.app import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
@@ -67,6 +67,23 @@ def get_member(id):
     else:
         return 'Member not found'
 
+
+@app.route('/all', methods=['GET'])
+def all_member():
+    all_values = it_college.query.all()
+    results = []
+
+    for value in all_values:
+        result = {
+            'Member ID': value.id,
+            'First Name': value.first_name,
+            'Last Name': value.last_name,
+            'Email': value.email,
+            'Unique Code': value.unique_code
+        }
+        results.append(result)
+
+    return jsonify(results)
 
 
 
