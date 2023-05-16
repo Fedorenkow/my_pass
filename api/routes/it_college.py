@@ -19,8 +19,8 @@ def add_member():
         email = request.form.get('email')
         unique_code = request.form.get('unique_code')
         type_id = request.form.get('type_id')
-        id = request.form.get('id')
-        name = request.form.get('name')
+        # id = request.form.get('id')
+        # name = request.form.get('name')
 
         # Перевірка чи всі дані присутні у запиті POST
         if not all([first_name, last_name, email, unique_code, type_id]):
@@ -36,10 +36,10 @@ def add_member():
         if member:
             return 'Member with this unique code already exists.', 409
 
-        # # Перевірка чи введений type_id існує в таблиці it_college_type
-        # member_type = it_college_type.query.filter_by(id=type_id).first()
-        # if not member_type:
-        #     return 'Invalid member type.', 400
+        # Перевірка чи введений type_id існує в таблиці it_college_type
+        member_type = it_college_type.query.filter_by(id=type_id).first()
+        if not member_type:
+            return 'Invalid member type.', 400
 
         # Створення нового члену і додавання до бази даних
         new_member = it_college(first_name=first_name,
@@ -47,10 +47,10 @@ def add_member():
                                 email=email,
                                 unique_code=unique_code,
                                 type_id=type_id)
-        new_member_type = it_college_type(id=id,
-                                          name=name)
+        # new_member_type = it_college_type(id=id,
+        #                                  name=name)
         db.session.add(new_member)
-        db.session.add(new_member_type)
+        # db.session.add(new_member_type)
         db.session.commit()
 
         return render_template("insert_user.html", title="Register")
@@ -60,9 +60,36 @@ def add_member():
 
 
 @app.route('/<int:id>', methods=['GET'])
-def get_member(id):
+def get_member_id(id):
     member = it_college.query.get(id)
     if member:
+        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
+    else:
+        return 'Member not found'
+
+
+@app.route('/first_name/<string:first_name>', methods=['GET'])
+def get_member_first_name(first_name):
+    member = it_college.query.get(first_name)
+    if member:
+        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
+    else:
+        return 'Member not found'
+
+
+@app.route('/last_name/<string:last_name>', methods=['GET'])
+def get_member_first_name(last_name):
+    member = it_college.query.get(last_name)
+    if member:
+        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
+    else:
+        return 'Member not found'
+
+
+@app.route('/email/<string:email>', methods=['GET'])
+def get_member_last_name(email):
+    member = it_college.query.get(email)
+    if email:
         return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
     else:
         return 'Member not found'
@@ -86,4 +113,14 @@ def all_member():
     return jsonify(results)
 
 
+@app.route('/delete/<int:id>', methods=['DELETE'])
+def delete_member(id):
+    user = it_college.query.get(id)
 
+    if user:
+        db.session.delete(id)
+        db.session.commit()
+        return jsonify({f"User id {id} deleted successfully"})
+
+    else:
+        return jsonify(f"User id:{id} is not found")
