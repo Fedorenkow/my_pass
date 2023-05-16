@@ -115,9 +115,9 @@ def all_member():
 
 @app.route('/delete/<int:id>', methods=['DELETE'])
 def delete_member(id):
-    user = it_college.query.get(id)
+    member = it_college.query.get(id)
 
-    if user:
+    if member:
         db.session.delete(id)
         db.session.commit()
         return jsonify({f"User id {id} deleted successfully"})
