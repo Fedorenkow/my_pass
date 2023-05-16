@@ -70,7 +70,7 @@ def get_member_id(id):
 
 @app.route('/first_name/<string:first_name>', methods=['GET'])
 def get_first_name(first_name):
-    member = it_college.query.get(first_name)
+    member = it_college.query.filter_by(first_name=first_name).first()
     if member:
         return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
     else:
@@ -79,7 +79,7 @@ def get_first_name(first_name):
 
 @app.route('/last_name/<string:last_name>', methods=['GET'])
 def get_member_first_name(last_name):
-    member = it_college.query.get(last_name)
+    member = it_college.query.filter_by(last_name=last_name).first()
     if member:
         return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
     else:
@@ -88,7 +88,7 @@ def get_member_first_name(last_name):
 
 @app.route('/email/<string:email>', methods=['GET'])
 def get_member_last_name(email):
-    member = it_college.query.get(email)
+    member = it_college.query.filter_by(email=email).first()
     if email:
         return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
     else:
