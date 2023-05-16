@@ -59,7 +59,7 @@ def add_member():
         return render_template("insert_user.html", title="Register")
 
 
-@app.route('/<int:id>', methods=['GET'])
+@app.route('/id/<int:id>', methods=['GET'])
 def get_member_id(id):
     member = it_college.query.get(id)
     if member:
