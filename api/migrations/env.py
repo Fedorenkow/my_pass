@@ -36,7 +36,6 @@ def get_engine_url():
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-
 from api.models.it_college import it_college
 from api.models.it_college_type import it_college_type
 
