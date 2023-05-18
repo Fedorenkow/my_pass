@@ -3,6 +3,7 @@ from api.app import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
 from api.models.it_college_type import it_college_type
+from api.utils.utils import generate_unique_code
 
 
 @app.route('/')
@@ -17,13 +18,12 @@ def add_member():
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
-        unique_code = request.form.get('unique_code')
         type_id = request.form.get('type_id')
         id = request.form.get('id')
         name = request.form.get('name')
 
         # Перевірка чи всі дані присутні у запиті POST
-        if not all([first_name, last_name, email, unique_code, type_id]):
+        if not all([first_name, last_name, email, type_id]):
             return 'Please fill in all required fields.', 400
 
         # Перевірка чи введений email не зареєстрований вже в базі даних
@@ -31,24 +31,14 @@ def add_member():
         if member:
             return 'Member with this email already exists.', 409
 
-        # Перевірка чи введений unique_code не зареєстрований вже в базі даних
-        member = it_college.query.filter_by(unique_code=unique_code).first()
-        if member:
-            return 'Member with this unique code already exists.', 409
-
-        # # Перевірка чи введений type_id існує в таблиці it_college_type
-        # member_type = it_college_type.query.filter_by(id=type_id).first()
-        # if not member_type:
-        #     return 'Invalid member type.', 400
-
         # Створення нового члену і додавання до бази даних
         new_member = it_college(first_name=first_name,
                                 last_name=last_name,
                                 email=email,
-                                unique_code=unique_code,
+                                unique_code=generate_unique_code(),
                                 type_id=type_id)
         new_member_type = it_college_type(id=id,
-                                         name=name)
+                                          name=name)
         db.session.add(new_member)
         db.session.add(new_member_type)
         db.session.commit()
@@ -63,33 +53,6 @@ def add_member():
 def get_member_id(id):
     member = it_college.query.get(id)
     if member:
-        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
-    else:
-        return 'Member not found'
-
-
-@app.route('/first_name/<string:first_name>', methods=['GET'])
-def get_first_name(first_name):
-    member = it_college.query.filter_by(first_name=first_name).first()
-    if member:
-        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
-    else:
-        return 'Member not found'
-
-
-@app.route('/last_name/<string:last_name>', methods=['GET'])
-def get_member_first_name(last_name):
-    member = it_college.query.filter_by(last_name=last_name).first()
-    if member:
-        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
-    else:
-        return 'Member not found'
-
-
-@app.route('/email/<string:email>', methods=['GET'])
-def get_member_last_name(email):
-    member = it_college.query.filter_by(email=email).first()
-    if email:
         return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
     else:
         return 'Member not found'
@@ -116,11 +79,15 @@ def all_member():
 @app.route('/delete/<int:id>', methods=['DELETE'])
 def delete_member(id):
     member = it_college.query.get(id)
+    db.session.delete(member)
+    db.session.commit()
 
-    if member:
-        db.session.delete(id)
-        db.session.commit()
-        return jsonify({f"User id {id} deleted successfully"})
+    return jsonify({"messege": f"User id {id} deleted successfully"})
 
+
+@app.route('/excel', methods=['GET', 'POST'])
+def parser_excel():
+    if request.method == 'POST':
+        return render_template("parser_excel.html", title="Parse")
     else:
-        return jsonify(f"User id:{id} is not found")
+        return render_template("parser_excel.html", title="Parse")
