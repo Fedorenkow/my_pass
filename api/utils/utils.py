@@ -2,4 +2,4 @@ import random
 
 
 def generate_unique_code():
-    return random.randint(10000, 99999)
+    return random.randint(1000000000, 9999999999)   
