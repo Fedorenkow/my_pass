@@ -5,9 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<form action="{{ url_for('parser_excel') }}" method="post"></form>
-<label for = "parse">Choose your excel file</label>
-<input type = "file" name = parse id = parse>
-
+    <form action="{{ url_for('parser_excel') }}" method="post" enctype="multipart/form-data">
+        <label for = "file">Choose your excel file</label>
+        <input type = "file" name = file id = file>
+        <button type = "submit"> Upload</button>
+    </form>
 </body>
 </html>
