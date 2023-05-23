@@ -1,3 +1,5 @@
+import pandas as pd
+import openpyxl
 from flask import request, render_template, jsonify
 from api.app import db, app
 from api.models import it_college_type
@@ -88,6 +90,43 @@ def delete_member(id):
 @app.route('/excel', methods=['GET', 'POST'])
 def parser_excel():
     if request.method == 'POST':
-        return render_template("parser_excel.html", title="Parse")
+        file = request.files['file']
+
+        if file and file.filename.endswith('.xlsx'):
+            try:
+
+                df = pd.read_excel(file)
+
+                for index, row in df.iterrows():
+                    first_name = row['First Name']
+                    last_name = row['Last Name']
+                    email = row['Email']
+                    name = row['Type_value']
+                    type_id = row['Type_id']
+                    id = row['Id']
+                    unique_code = generate_unique_code()
+
+                    member = it_college(
+                        first_name=first_name,
+                        last_name=last_name,
+                        email=email,
+                        unique_code=unique_code,
+                        type_id=type_id
+                    )
+                    member_type = it_college_type(
+                        id=id,
+                        name=name,
+                    )
+
+                    db.session.add(member)
+                    db.session.add(member_type)
+
+                db.session.commit()
+
+                return 'Members added successfully'
+
+            except Exception as e:
+                return f'Error occurred: {str(e)}'
+
     else:
         return render_template("parser_excel.html", title="Parse")
