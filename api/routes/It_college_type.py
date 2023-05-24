@@ -10,3 +10,20 @@ def get_member_type_id(id):
         return jsonify(f"Member ID: {member.id},member type: {member.name},registered: {member.registered}")
     else:
         return 'Member not found'
+
+
+@app.route('/all_type', methods=['GET'])
+def get_member_type_all():
+    all_values = it_college_type.query.all()
+    results = []
+
+    for value in all_values:
+        result = {
+            'Member ID':value.id,
+            'type': value.name,
+            'Registered':value.registered
+        }
+        results.append(result)
+
+    return jsonify(results)
+
