@@ -1,5 +1,4 @@
 import pandas as pd
-import openpyxl
 from flask import request, render_template, jsonify
 from api.app import db, app
 from api.models import it_college_type
@@ -23,7 +22,7 @@ def add_member():
         type_id = request.form.get('type_id')
         id = request.form.get('id')
         name = request.form.get('name')
-
+        unique_code = generate_unique_code()
         # Перевірка чи всі дані присутні у запиті POST
         if not all([first_name, last_name, email, type_id]):
             return 'Please fill in all required fields.', 400
@@ -33,11 +32,17 @@ def add_member():
         if member:
             return 'Member with this email already exists.', 409
 
+        # Перевірка чи унікальний код не зареєстрований
+        unique = it_college.query.filter_by(unique_code=unique_code).first()
+        while unique:
+            unique_code = generate_unique_code()
+            unique = it_college.query.filter_by(unique_code=unique_code).first()
+
         # Створення нового члену і додавання до бази даних
         new_member = it_college(first_name=first_name,
                                 last_name=last_name,
                                 email=email,
-                                unique_code=generate_unique_code(),
+                                unique_code=unique_code,
                                 type_id=type_id)
         new_member_type = it_college_type(id=id,
                                           name=name)
@@ -105,6 +110,12 @@ def parser_excel():
                     type_id = row['Type_id']
                     id = row['Id']
                     unique_code = generate_unique_code()
+
+                    # Перевірка чи унікальний код не зареєстрований у базі
+                    unique = it_college.query.filter_by(unique_code=unique_code).first()
+                    while unique:
+                        unique_code = generate_unique_code()
+                        unique = it_college.query.filter_by(unique_code=unique_code).first()
 
                     member = it_college(
                         first_name=first_name,
