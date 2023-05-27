@@ -4,7 +4,7 @@ from api.app import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
 from api.models.it_college_type import it_college_type
-from api.utils.utils import generate_unique_code
+from api.utils.utils import generate_unique_code, check_unique_code
 
 
 @app.route('/')
@@ -89,7 +89,7 @@ def delete_member(id):
     db.session.delete(member)
     db.session.commit()
 
-    return jsonify({"messege": f"User id {id} deleted successfully"})
+    return jsonify({"message": f"User id {id} deleted successfully"})
 
 
 @app.route('/excel', methods=['GET', 'POST'])
@@ -141,3 +141,9 @@ def parser_excel():
 
     else:
         return render_template("parser_excel.html", title="Parse")
+
+
+@app.route('/check/<string:code>', methods=["GET"])
+def check_code(code):
+    result = check_unique_code(code)
+    return jsonify(result)
