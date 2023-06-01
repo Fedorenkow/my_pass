@@ -19,11 +19,10 @@ def get_member_type_all():
 
     for value in all_values:
         result = {
-            'Member ID':value.id,
+            'Member ID': value.id,
             'type': value.name,
-            'Registered':value.registered
+            'Registered': value.registered
         }
         results.append(result)
 
     return jsonify(results)
-
