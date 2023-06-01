@@ -149,6 +149,7 @@ def check_code(code):
     result = check_unique_code(code)
     return jsonify(result)
 
-@app.route('/home', methods = ["GET"])
+
+@app.route('/home')
 def home_page():
-    return render_template(",",)
+    return render_template("home_page.html", title="Home")
