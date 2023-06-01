@@ -23,6 +23,7 @@ def add_member():
         id = request.form.get('id')
         name = request.form.get('name')
         unique_code = generate_unique_code()
+
         # Перевірка чи всі дані присутні у запиті POST
         if not all([first_name, last_name, email, type_id]):
             return 'Please fill in all required fields.', 400
@@ -147,3 +148,7 @@ def parser_excel():
 def check_code(code):
     result = check_unique_code(code)
     return jsonify(result)
+
+@app.route('/home', methods = ["GET"])
+def home_page():
+    return render_template(",",)
