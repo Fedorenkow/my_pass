@@ -22,7 +22,7 @@ def add_member():
         type_id = request.form.get('type_id')
         id = request.form.get('id')
         name = request.form.get('name')
-        unique_code = generate_unique_code()
+        unique_code = str(generate_unique_code())
 
         # Перевірка чи всі дані присутні у запиті POST
         if not all([first_name, last_name, email, type_id]):
