@@ -3,22 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <style>
+        .logo {
+            height: 200px;
+            width: 1000px;
+        }
         .container {
             display: flex;
-            justify-content: space-between;
-            color: #9e22c7;
-            /* border: 2px solid purple; */
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .methods {
+            font-family: 'Open Sans', sans-serif;
+            width: 150px;
+            height: 40px;
+            text-align: center;
+            background-color: #7d4acf;
+            border: 2px solid #7d4acf;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 5px;
+            padding: 5px 10px;
+        }
+        .registration-form {
+            display: none;
+            margin-top: 20px;
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+        }
+        .show-form {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class = "container">
-        <div>Add new member</div>
-        <div>Get all members</div>
-        <div>Get member by id</div>
-        <div>Delete member by id</div>
-        <div>Parse excel to data base</div>
+    <div>
+        <img class="logo" src="images/college-2.png">
     </div>
+    <div class="container">
+    <a href="#" class="methods" onclick="showForm('add-member-form')">Add new member</a>
+    <a href="#" class="methods" onclick="showForm('get-all-members-form')">Get all members</a>
+    <a href="#" class="methods" onclick="showForm('get-member-by-id-form')">Get member by id</a>
+    <a href="#" class="methods" onclick="showForm('delete-member-by-id-form')">Delete member by id</a>
+    <a href="#" class="methods" onclick="showForm('parse-excel-form')">Parse excel to database</a>
+</div>
+
+    <!-- Registration Form -->
+    <div id="add-member-form" class="registration-form">
+        <h2>Add new member</h2>
+        <form  method="POST" action="{{ url_for('add_member') }}">
+            <label for="first_name">First Name:</label>
+		    <input type="text" id="first_name" name="first_name" required>
+		    <br>
+
+		    <label for="last_name">Last Name:</label>
+		    <input type="text" id="last_name" name="last_name" required>
+		    <br>
+
+		    <label for="name">Name type:</label>
+		    <input type="text" id="name" name="name" required>
+		    <br>
+
+		    <label for="email">Email:</label>
+		    <input type="email" id="email" name="email" required>
+		    <br>
+
+		    <label for="type_id">Type ID for it_college:</label>
+		    <input type="number" id="type_id" name="type_id" required>
+		    <br>
+
+		    <label for="id">Type ID for it_college_type:</label>
+		    <input type="number" id="id" name="id" required>
+		    <br>
+
+		    <button type="submit">Add Member</button>
+
+        </form>
+    </div>
+
+   <div id="get-all-members-form" class="registration-form">
+    <h2>Get all members</h2>
+    <form method="GET" action="{{ url_for('all_member') }}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Member ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Unique Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- The table rows will be dynamically populated using JavaScript -->
+            </tbody>
+        </table>
+        <button type="submit">Get Members</button>
+    </form>
+</div>
+
+    <div id="get-member-by-id-form" class="registration-form">
+        <h2>Get member by id</h2>
+        <form>
+            <!-- Form fields go here -->
+        </form>
+    </div>
+
+    <div id="delete-member-by-id-form" class="registration-form">
+        <h2>Delete member by id</h2>
+        <form>
+            <!-- Form fields go here -->
+        </form>
+    </div>
+
+    <div id="parse-excel-form" class="registration-form">
+        <h2>Parse excel to data base</h2>
+        <form>
+
+        </form>
+    </div>
+
+   <script>
+    function showForm(formId) {
+        var forms = document.getElementsByClassName('registration-form');
+        for (var i = 0; i < forms.length; i++) {
+            forms[i].style.display = 'none';
+        }
+
+        var form = document.getElementById(formId);
+        form.style.display = 'block';
+    }
+
+  document.getElementById('add-member-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    var form = document.querySelector('#add-member-form form');
+
+    // Create a new FormData object and append form data
+    var formData = new FormData(form);
+    // Make sure the form fields have the correct "name" attributes for the server-side processing
+
+    fetch("{{ url_for('add_member') }}", {
+      method: 'POST',
+      body: formData
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error: ' + response.status);
+        }
+      })
+      .then(function (data) {
+        // Display success message or perform any other actions
+        console.log(data);
+      })
+      .catch(function (error) {
+        // Display error message or perform any other error handling
+        console.log(error);
+      });
+  });
+
+    document.getElementById('get-all-members-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        fetch("{{ url_for('all_member') }}")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var tbody = document.querySelector("#get-all-members-form tbody");
+                tbody.innerHTML = "";
+
+                data.forEach(function (result) {
+                    var tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${result['Member ID']}</td>
+                        <td>${result['First Name']}</td>
+                        <td>${result['Last Name']}</td>
+                        <td>${result['Email']}</td>
+                        <td>${result['Unique Code']}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    });
+</script>
 </body>
 </html>
