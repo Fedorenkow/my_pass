@@ -1,5 +1,5 @@
 import pandas as pd
-from flask import request, render_template, jsonify
+from flask import request, render_template, jsonify, url_for
 from api.app import db, app
 from api.models import it_college_type
 from api.models.it_college import it_college
@@ -10,6 +10,11 @@ from api.utils.utils import generate_unique_code, check_unique_code
 @app.route('/')
 def hello():
     return 'hello'
+
+
+@app.route('/home')
+def home():
+    return render_template("home_page.html")
 
 
 @app.route('/add', methods=['GET', 'POST'])
