@@ -52,7 +52,6 @@
     <a href="#" class="methods" onclick="showForm('parse-excel-form')">Parse excel to database</a>
 </div>
 
-    <!-- Registration Form -->
     <div id="add-member-form" class="registration-form">
         <h2>Add new member</h2>
         <form  method="POST" action="{{ url_for('add_member') }}">
@@ -106,28 +105,45 @@
     </form>
 </div>
 
-    <div id="get-member-by-id-form" class="registration-form">
-        <h2>Get member by id</h2>
-        <form>
-            <!-- Form fields go here -->
-        </form>
-    </div>
+   <div id="get-member-by-id-form" class="registration-form">
+    <h2>Get member by id</h2>
+    <form>
+        <input type="number" name="memberId" placeholder="Enter member ID" required>
+        <button type="submit">Search</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Member ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Unique Code</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
     <div id="delete-member-by-id-form" class="registration-form">
-        <h2>Delete member by id</h2>
-        <form>
-            <!-- Form fields go here -->
-        </form>
-    </div>
+    <h2>Delete member by id</h2>
+    <form>
+        <input type="number" name="memberId" placeholder="Enter member ID" required>
+        <button type="submit">Delete</button>
+    </form>
+</div>
 
     <div id="parse-excel-form" class="registration-form">
-        <h2>Parse excel to data base</h2>
-        <form>
-
-        </form>
-    </div>
+    <h2>Parse excel to database</h2>
+    <form>
+        <input type="file" name="file" accept=".xlsx" required>
+        <button type="submit">Parse</button>
+    </form>
+</div>
 
    <script>
+
+<!--   Function for display forms-->
     function showForm(formId) {
         var forms = document.getElementsByClassName('registration-form');
         for (var i = 0; i < forms.length; i++) {
@@ -137,9 +153,9 @@
         var form = document.getElementById(formId);
         form.style.display = 'block';
     }
-
+<!--Function for add members forms-->
   document.getElementById('add-member-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
 
     var form = document.querySelector('#add-member-form form');
 
@@ -166,8 +182,10 @@
       });
   });
 
+<!--Function for get all members from database-->
+
     document.getElementById('get-all-members-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
 
         fetch("{{ url_for('all_member') }}")
             .then(function (response) {
@@ -193,6 +211,102 @@
                 console.log(error);
             });
     });
+
+<!--Function for get member by id from database-->
+    document.getElementById('get-member-by-id-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var form = document.querySelector('#get-member-by-id-form form');
+    var formData = new FormData(form);
+
+    fetch("{{ url_for('get_member_id', id=0) }}".replace('0', formData.get('memberId')), {
+        method: 'GET'
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error: ' + response.status);
+            }
+        })
+        .then(function (data) {
+            var tbody = document.querySelector("#get-member-by-id-form tbody");
+            tbody.innerHTML = "";
+
+            var tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${data['Member ID']}</td>
+                <td>${data['First Name']}</td>
+                <td>${data['Last Name']}</td>
+                <td>${data['Email']}</td>
+                <td>${data['Unique Code']}</td>
+            `;
+            tbody.appendChild(tr);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
+
+<!--Function for delete member by id from database-->
+document.getElementById('delete-member-by-id-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var form = document.querySelector('#delete-member-by-id-form form');
+    var formData = new FormData(form);
+
+    fetch("{{ url_for('delete_member', id=0) }}".replace('0', formData.get('memberId')), {
+        method: 'DELETE'
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error: ' + response.status);
+            }
+        })
+        .then(function (data) {
+            // Display success message or perform any other actions
+            console.log(data);
+        })
+        .catch(function (error) {
+            // Display error message or perform any other error handling
+            console.log(error);
+        });
+});
+
+document.getElementById('parse-excel-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    var form = document.querySelector('#parse-excel-form form');
+    var formData = new FormData(form);
+
+    var fileInput = document.querySelector('#parse-excel-form input[type="file"]');
+    var file = fileInput.files[0];
+
+    formData.append('file', file);
+
+    fetch("{{ url_for('parser_excel') }}", {
+        method: 'POST',
+        body: formData
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Error: ' + response.status);
+            }
+        })
+        .then(function (data) {
+            // Display success message or perform any other actions
+            console.log(data);
+        })
+        .catch(function (error) {
+            // Display error message or perform any other error handling
+            console.log(error);
+        });
+});
+
 </script>
 </body>
 </html>
