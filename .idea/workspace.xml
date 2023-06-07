@@ -6,10 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2c5bf8ae-4a8f-4c18-a410-bd5a7ca68b4c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/images/college-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/images/college-icone.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/routes/it_college.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/routes/it_college.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/templates/home_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/api/templates/home_page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/images/college-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/images/college-icone.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +45,12 @@
     &quot;last_opened_file_path&quot;: &quot;F:/Presentation/Clone/my_pass&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Presentation\Clone\my_pass\api\templates\static" />
+      <recent name="F:\Presentation\Clone\my_pass\api\templates\static\images" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.run">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="my_pass" />
