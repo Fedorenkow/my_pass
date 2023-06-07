@@ -1,9 +1,9 @@
-from flask import Flask, current_app
+from flask import Flask, current_app, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', static_folder='static')
 api = Api(app)
 
 with app.app_context():
