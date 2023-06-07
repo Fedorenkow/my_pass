@@ -42,9 +42,8 @@
     </style>
 </head>
 <body>
-    <div>
-        <img class="logo" src="images/college-2.png">
-    </div>
+    <img class="logo" src="{{url_for('static', filename='1.png')}}">
+
     <div class="container">
     <a href="#" class="methods" onclick="showForm('add-member-form')">Add new member</a>
     <a href="#" class="methods" onclick="showForm('get-all-members-form')">Get all members</a>
@@ -100,7 +99,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- The table rows will be dynamically populated using JavaScript -->
+
             </tbody>
         </table>
         <button type="submit">Get Members</button>
@@ -144,9 +143,7 @@
 
     var form = document.querySelector('#add-member-form form');
 
-    // Create a new FormData object and append form data
     var formData = new FormData(form);
-    // Make sure the form fields have the correct "name" attributes for the server-side processing
 
     fetch("{{ url_for('add_member') }}", {
       method: 'POST',
