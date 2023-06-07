@@ -66,7 +66,13 @@ def add_member():
 def get_member_id(id):
     member = it_college.query.get(id)
     if member:
-        return f"Member ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Email: {member.email}, Unique Code: {member.unique_code}"
+        return jsonify({
+            'Member ID': member.id,
+            'First Name': member.first_name,
+            'Last Name': member.last_name,
+            'Email': member.email,
+            'Unique Code': member.unique_code
+        })
     else:
         return 'Member not found'
 
@@ -92,7 +98,14 @@ def all_member():
 @app.route('/delete/<int:id>', methods=['DELETE'])
 def delete_member(id):
     member = it_college.query.get(id)
+
+    # Видаляємо запис з таблиці it_college
     db.session.delete(member)
+
+    # Видаляємо запис з таблиці it_college_type за відповідним type_id
+    member_type = it_college_type.query.filter_by(id=member.type_id).first()
+    db.session.delete(member_type)
+
     db.session.commit()
 
     return jsonify({"message": f"User id {id} deleted successfully"})
@@ -115,7 +128,7 @@ def parser_excel():
                     name = row['Type_value']
                     type_id = row['Type_id']
                     id = row['Id']
-                    unique_code = generate_unique_code()
+                    unique_code = str(generate_unique_code())
 
                     # Перевірка чи унікальний код не зареєстрований у базі
                     unique = it_college.query.filter_by(unique_code=unique_code).first()
