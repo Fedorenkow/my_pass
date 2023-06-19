@@ -12,11 +12,6 @@ def hello():
     return 'hello'
 
 
-@app.route('/home')
-def home():
-    return render_template("home_page.html")
-
-
 @app.route('/add', methods=['GET', 'POST'])
 def add_member():
     if request.method == 'POST':
